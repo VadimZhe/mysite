@@ -1,0 +1,9 @@
+<h1>{{ status_message }}<br><br>{{ guessing }}<br><br></h1>
+
+<form action= "{% url 'hanger:guess_made' %}" method="get">
+    {% csrf_token %}
+    Enter letter (r for reset):<input type="text" id="guess_letter" name="guess_letter" />
+    <input type="submit" value="Guess" />
+<br><br>
+Already used: {{ guessed }}
+</form>
