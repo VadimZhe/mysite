@@ -1,9 +1,22 @@
-<h1>{{ status_message }}<br><br>{{ guessing }}<br><br></h1>
+<h1>{{ status_message }}<br><br>{{ the_word.hint }}<br><br></h1>
 
-<form action= "{% url 'hanger:guess_made' %}" method="get">
-    {% csrf_token %}
-    Enter letter (r for reset):<input type="text" id="guess_letter" name="guess_letter" />
-    <input type="submit" value="Guess" />
-<br><br>
-Already used: {{ guessed }}
+{% if the_word.finished %}
+<form action= "{% url 'hanger:guess' %}" method="get">
+    <input type="hidden" id="guess_letter" name="guess_letter" value = "*"  />
+    <input type = "submit" value = "Restart" />
 </form>
+{% else %}
+<form action= "{% url 'hanger:guess' %}" method="get">
+    {% csrf_token %}
+    Enter letter (* for reset):<input type="text" id="guess_letter" name="guess_letter" autofocus/>
+    <input type="submit" value="Guess" />
+</form>
+{% endif %}
+<br><br>
+Used letters: {{ the_word.used_letters }}
+<br><br>
+Wrong attempts left: {{ the_word.attempts_left}}
+{% if debug %}
+<br><br>
+The word is : {{ the_word.word }}
+{% endif %}
