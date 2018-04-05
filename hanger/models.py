@@ -1,38 +1,51 @@
 from django.db import models
 
-class TheWord(models.Model):
-    word = models.CharField(max_length=50) #'abracadabra'
-    #guessed = '_'*len(word)
+
+class Words(models.Model):
+    word = models.CharField(max_length=50)
+
+
+class Hangers:
     max_wrong_attempts = 10
     
-    def not__init__(self):
-        self.request = 0 #request
-        #dummy = TheWord.objects.get(pk=1).word
-        #self.word = 'dummy'
-
-    def my_init(self, request):
+    def __init__(self, request, word=''):
         self.request = request
-        #self.word = word
-        self.hint = "_" * len(self.word)
-        self.used_letters = ''
-        self.wrong_attempts = 0
-        
+        if word == '':
+            self.secret_word = request.session['word']
+            self.hint = request.session['hint']
+            self.used_letters = request.session['used']
+            self.wrong_attempts = request.session['failures']
+        else:
+            self.secret_word = word
+            self.hint = "_" * len(self.secret_word)
+            self.used_letters = ''
+            self.wrong_attempts = 0
+
+    def save_to_cookies(self):
+        self.request.session['word'] = self.secret_word
+        self.request.session['hint'] = self.hint
+        self.request.session['used'] = self.used_letters
+        self.request.session['failures'] = self.wrong_attempts
+
     def check_letter(self, letter):
-        letter = letter.upper()
+        letter = letter[0].upper()
         self.add_used(letter)
-        retvalue = letter in self.word.upper()
+        retvalue = letter in self.secret_word.upper()
         if retvalue:
-            for i in range(len(self.word)):
-                if self.word[i].upper() == letter:
-                    self.hint = self.hint[:i] + letter + self.hint[i+1:]
+            for i in filter(lambda c: c[1].upper() == letter, enumerate(self.secret_word.upper())):
+                self.hint = self.hint[:i[0]] + letter + self.hint[i[0] + 1:]
             self.save_hint()
         else:
-            self.add_miss()
+            self.add_miss(letter)
         return retvalue
         
-    def add_miss(self):
+    def save_hint(self):
+        self.request.session['hint'] = self.hint
+
+    def add_miss(self, letter):
         self.wrong_attempts += 1
-    
+        self.request.session['failures'] = self.wrong_attempts
+
     def solved(self):
         return not "_" in self.hint
         
@@ -47,26 +60,13 @@ class TheWord(models.Model):
     
     def add_used(self, letter):
         self.used_letters += letter
-        self.request.session['guessed'] = self.used_letters
+        self.request.session['used'] = self.used_letters
     
     def letter_used(self, letter):
-        return letter in self.used_letters
+        return letter.upper() in self.used_letters
 
-    def save_hint(self):
-        self.request.session['hint'] = self.hint
-
-    def get_hint(self):
-        last_hint = self.request.session.get('hint', False);
-        if not last_hint:
-            last_hint = '_' * len(self.secret_word)
-            request.session['hint'] = last_hint
-        return last_hint
-        
     def get_answer(self):
-        return self.word
+        return self.secret_word
 	
     def __str__(self):
-        return self.word + ' (' + '_'*len(self.word)+ ')' #guessed
-        
-    def guessing_string(self):
-        return '_'*len(self.word)
+        return self.secret_word + ' (' + '_'*len(self.secret_word)+ ')' #guessed
