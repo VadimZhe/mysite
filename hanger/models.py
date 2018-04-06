@@ -4,6 +4,8 @@ from django.db import models
 class Words(models.Model):
     word = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.word
 
 class Hangers:
     max_wrong_attempts = 10
@@ -59,8 +61,11 @@ class Hangers:
         return self.max_wrong_attempts - self.wrong_attempts
     
     def add_used(self, letter):
-        self.used_letters += letter
+        if letter in self.used_letters:
+            return False
+        self.used_letters = ''.join(sorted(self.used_letters + letter))
         self.request.session['used'] = self.used_letters
+        return True
     
     def letter_used(self, letter):
         return letter.upper() in self.used_letters

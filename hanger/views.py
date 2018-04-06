@@ -27,7 +27,7 @@ def make_a_guess(request):
     if not new_letter.isalpha():
         status_msg = 'Enter a letter, please'
     elif hanger.letter_used(new_letter[0].upper()):
-        status_msg = '"' + new_letter[0].upper() + '" has been already used'
+        status_msg = '"' + new_letter[0].upper() + '" has already been used'
     else:
         status_msg = 'You entered "' + new_letter[0].upper() + '"'
         if hanger.check_letter(new_letter):
@@ -43,3 +43,6 @@ def make_a_guess(request):
             'the_word': hanger,
             'debug' : debug,
     })
+
+def show_me_func(request):
+    return HttpResponse(True)
