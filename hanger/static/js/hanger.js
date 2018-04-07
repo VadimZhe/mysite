@@ -19,4 +19,5 @@ function DrawHanger(stage) {
     if(stage<1)ctx.lineTo(95, 135); //leg2
     ctx.strokeStyle = "rgba(0,0,0,1)";
 	ctx.stroke();
+	//console.log("line added")
 }

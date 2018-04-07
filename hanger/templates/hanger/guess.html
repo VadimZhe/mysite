@@ -1,12 +1,20 @@
 {% load static %}
-<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <h1>{{ status_message }}<br><br><font face="Courier New">{{ the_word.hint }}</font><br><br></h1>
+        <style>
+            p {
+                color: red;
+                margin: 5px;
+                cursor: pointer;
+              }
+             p:hover {
+                background: yellow;
+              }
+          </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="{% static "js/hanger.js" %}"></script>
     </head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="{% static "js/hanger.js" %}"></script>
-    <script src="{% static "js/hanger-ajax.js" %}"></script>
     <body onload="DrawHanger({{ the_word.attempts_left }});">
         <table>
             <tr>
@@ -17,6 +25,7 @@
                             Your letter :<input type="text" id="guess_letter" name="guess_letter" size = 1 autofocus />
                             <input type="submit" value="Guess" />
                         </form>
+                        <button id="show_it">Show me...</button>
                     {% endif %}
                     <form action= "{% url 'hanger:guess' %}" method="get">
                         <input type="hidden" id="guess_letter" name="guess_letter" value = "*"  />
@@ -30,11 +39,6 @@
                         <br><br>
                         <font color="#C0C0C0">The word is : {{ the_word.get_answer }}</font>
                         <br><br>
-                        <!--form action = "{% url 'hanger:showme' %}" method="get"-->
-                            <!--input type = "submit" id = "show_it" value = "Show me..." /-->
-                            <button id="show it">Show me...</button>
-                        <!--/form-->
-                        <br><br>
                         <div id="the_object">
                             {{ object_to_show }}
                         </div>
@@ -45,5 +49,9 @@
                 </td>
             </tr>
         </table>
+        <div id="target">
+            Click here
+        </div>
+        <script src="{% static "js/hanger-ajax.js" %}"></script>
     </body>
 </html>

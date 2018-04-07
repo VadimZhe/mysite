@@ -1,5 +1,6 @@
 $('#show_it').click(function(){
-    $.get('/hanger/showme/', {0}, function(data){
-               $('#the_object"').html("Here I am!");
+    console.log("AJAX starting...")
+    $.get('/hanger/showme/',0, function(data){
+        $('#target').html("You clicked!");
     });
 });

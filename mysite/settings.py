@@ -124,3 +124,4 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     "C:\Python\Source\mysite\hanger\static",
 ]
+#STATIC_ROOT = "C:\Python\Source\mysite\hanger\static"
