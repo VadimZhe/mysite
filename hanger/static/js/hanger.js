@@ -1,6 +1,7 @@
 function DrawHanger(stage) {
     cnv = document.getElementById("Canvas1");
     ctx = cnv.getContext("2d");
+    ctx.clearRect(0, 0, cnv.width, cnv.height);
     ctx.beginPath();
 	ctx.moveTo(10,180); //base
 	if(stage<10)ctx.lineTo(50,180);

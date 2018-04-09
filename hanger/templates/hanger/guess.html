@@ -1,17 +1,12 @@
 {% load static %}
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <h1>{{ status_message }}<br><br><font face="Courier New">{{ the_word.hint }}</font><br><br></h1>
-        <style>
-            p {
-                color: red;
-                margin: 5px;
-                cursor: pointer;
-              }
-             p:hover {
-                background: yellow;
-              }
-          </style>
+        <h1>
+            <div id="status_msg">{{ the_word.status_message }}</div>
+            <br><br>
+            <div id="hint"><font face="Courier New">{{ the_word.hint }}</font></div>
+            <br><br>
+        </h1>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="{% static "js/hanger.js" %}"></script>
     </head>
@@ -19,29 +14,15 @@
         <table>
             <tr>
                 <td>
-                    {% if not the_word.finished %}
-                        <form action= "{% url 'hanger:guess' %}" method="get">
-                            {% csrf_token %}
-                            Your letter :<input type="text" id="guess_letter" name="guess_letter" size = 1 autofocus />
-                            <input type="submit" value="Guess" />
-                        </form>
-                        <button id="show_it">Show me...</button>
-                    {% endif %}
-                    <form action= "{% url 'hanger:guess' %}" method="get">
-                        <input type="hidden" id="guess_letter" name="guess_letter" value = "*"  />
-                        <input type = "submit" value = "Restart" />
-                    </form>
+                    <input type = "submit" id = "reset" value = "Restart" />
                     <br><br>
-                    Used letters: {{ the_word.used_letters }}
+                    Used letters: <span id="used_ltrs"> {{ the_word.used_letters }} </span>
                     <br><br>
-                    Wrong attempts left: {{ the_word.attempts_left}}
+                    Wrong attempts left: <span id="wrong_attempts" title="Click to see the answer"> {{ the_word.attempts_left }} </span>
                     {% if debug %}
                         <br><br>
-                        <font color="#C0C0C0">The word is : {{ the_word.get_answer }}</font>
+                        <font color="#C0C0C0"><span id="debug_txt"></span></font>
                         <br><br>
-                        <div id="the_object">
-                            {{ object_to_show }}
-                        </div>
                     {% endif %}
                 </td>
                 <td>
@@ -49,9 +30,6 @@
                 </td>
             </tr>
         </table>
-        <div id="target">
-            Click here
-        </div>
         <script src="{% static "js/hanger-ajax.js" %}"></script>
     </body>
 </html>

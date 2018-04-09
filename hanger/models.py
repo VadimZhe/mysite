@@ -17,11 +17,13 @@ class Hangers:
             self.hint = request.session['hint']
             self.used_letters = request.session['used']
             self.wrong_attempts = request.session['failures']
+            self.status_message = '-'
         else:
             self.secret_word = word
             self.hint = "_" * len(self.secret_word)
             self.used_letters = ''
             self.wrong_attempts = 0
+            self.status_message = 'Guess a letter'
 
     def save_to_cookies(self):
         self.request.session['word'] = self.secret_word
@@ -73,5 +75,23 @@ class Hangers:
     def get_answer(self):
         return self.secret_word
 	
-    def __str__(self):
-        return self.secret_word + ' (' + '_'*len(self.secret_word)+ ')' #guessed
+    #def __str__(self):
+    #    return self.secret_word + ' (' + '_'*len(self.secret_word)+ ')' #guessed
+
+    def guess(self, new_letter):
+        if self.lost() or self.solved():
+            self.status_message = 'Just click "Restart", OK?'
+        elif not new_letter.isalpha():
+            self.status_message = 'You typed "' + new_letter + '". Type a letter, please'
+        elif self.letter_used(new_letter[0].upper()):
+            self.status_message = '"' + new_letter[0].upper() + '" has already been used'
+        else:
+            self.status_message = 'You entered "' + new_letter[0].upper() + '"'
+            if self.check_letter(new_letter):
+                self.status_message += ' and hit!'
+                if self.solved():
+                    self.status_message += ' You won! Click Restart'
+            else:
+                self.status_message += ' and missed.'
+                if self.lost():
+                    self.status_message += ' You lost! The word was "' + self.secret_word + '". Click Restart'
