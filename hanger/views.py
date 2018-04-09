@@ -25,8 +25,11 @@ def make_a_guess(request, new_letter):
 def make_a_guess_sync(request):
     global debug
     new_letter = request.GET.get('guess_letter', '')#[0].upper()
-    hanger = make_a_guess(request, new_letter)
     #print('Left: ', hanger.attempts_left())
+    if new_letter == '':
+        hanger = initial_view(request)
+    else:
+        hanger = make_a_guess(request, new_letter)
     return render(request, 'hanger/guess.html', {
             'the_word': hanger,
             'debug' : debug,

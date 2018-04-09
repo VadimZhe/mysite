@@ -3,9 +3,7 @@ $('#reset').click(function(){
         $('#status_msg').html(data['message']);
         $('#hint').html(data['hint'])
         $('#used_ltrs').html(data['used'])
-        if ($('#debug_txt').html() != ''){
-            $('#debug_txt').html(data['secret'])
-        }
+        $('#debug_txt').html('')
         wrong_num = data['wrong_num']
         $('#wrong_attempts').html(wrong_num)
         DrawHanger(wrong_num)
